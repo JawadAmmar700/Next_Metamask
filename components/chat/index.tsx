@@ -5,12 +5,11 @@ import Moment from "react-moment"
 
 const Chat = () => {
   const { user, setUserData, Moralis, logout }: any = useMoralis()
-  const messageRef = useRef(null)
-  const scrollRef = useRef(null)
+  const messageRef: React.MutableRefObject<null> = useRef(null)
+  const scrollRef: React.MutableRefObject<null> = useRef(null)
   const { data, error, isLoading } = useMoralisQuery(
     "messages",
     query => query.ascending("createdAt"),
-    // .greaterThan("createdAt", new Date(Date.now() - 1000 * 60 * 15)),
     [],
     {
       live: true,
@@ -23,7 +22,7 @@ const Chat = () => {
       username: newUsername,
     })
   }
-
+  console.log(data)
   const sendMessage = e => {
     e.preventDefault()
     const messageInstance = Moralis.Object.extend("messages")
@@ -96,9 +95,7 @@ const Chat = () => {
                     }  `}
                   >
                     <Image
-                      src={`https://avatars.dicebear.com/api/pixel-art/${user.get(
-                        "username"
-                      )}.svg`}
+                      src={`https://avatars.dicebear.com/api/pixel-art/${message.attributes.user}.svg`}
                       alt="avatar"
                       width={20}
                       height={20}
