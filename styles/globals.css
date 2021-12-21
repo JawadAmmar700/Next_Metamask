@@ -10,6 +10,14 @@ body {
   box-sizing: border-box;
 }
 
+audio::-webkit-media-controls-play-button,
+audio::-webkit-media-controls-panel {
+  background-color: #db2777;
+  color: #fff;
+  outline: none;
+  border: 1px solid #db2777;
+}
+
 ::-webkit-scrollbar {
   display: none;
 }
