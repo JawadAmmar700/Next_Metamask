@@ -5,7 +5,7 @@ import { useMoralis } from "react-moralis"
 const Login = () => {
   const { authenticate } = useMoralis()
   return (
-    <div className="w-full h-screen flex justify-center items-center">
+    <div className="w-full h-screen relative flex justify-center items-center">
       <Image
         src="https://links.papareact.com/55n"
         alt="backgroundImage"

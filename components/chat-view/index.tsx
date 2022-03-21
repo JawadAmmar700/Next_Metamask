@@ -13,11 +13,11 @@ const View = ({ message, user }: any) => {
   const [sec, setSec] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
 
+  const getAudioDuration = async () => {
+    const duration = await getBlobDuration(audioUrl)
+    setAudioDuration(duration)
+  }
   useEffect(() => {
-    const getAudioDuration = async () => {
-      const duration = await getBlobDuration(audioUrl)
-      setAudioDuration(duration)
-    }
     getAudioDuration()
   }, [audioUrl])
 
