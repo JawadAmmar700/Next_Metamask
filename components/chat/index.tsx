@@ -2,7 +2,7 @@ import React, { useRef } from "react"
 import { useMoralis, ByMoralis, useMoralisQuery } from "react-moralis"
 import View from "../chat-view"
 import Input from "../input"
-import Loader from "react-loader-spinner"
+import { Puff } from "react-loader-spinner"
 import Header from "../header"
 
 const Chat = () => {
@@ -35,13 +35,7 @@ const Chat = () => {
             </>
           ) : (
             <div className="flex items-center justify-center">
-              <Loader
-                type="Puff"
-                color="#c43b6f"
-                height={50}
-                width={50}
-                timeout={3000}
-              />
+              <Puff color="#c43b6f" height={50} width={50} />
             </div>
           )}
 
