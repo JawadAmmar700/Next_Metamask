@@ -3,7 +3,7 @@ import Head from "next/head"
 import { useMoralis } from "react-moralis"
 import Chat from "../components/chat"
 import Login from "../components/login"
-import Loader from "react-loader-spinner"
+import { Puff } from "react-loader-spinner"
 
 const Home: NextPage = () => {
   const { isAuthenticated, isInitializing } = useMoralis()
@@ -11,13 +11,7 @@ const Home: NextPage = () => {
   if (isInitializing && isAuthenticated) {
     return (
       <div className="w-full h-screen flex justify-center items-center bg-gradient-to-b from-[#070207] to-[#4D2053]">
-        <Loader
-          type="Puff"
-          color="#c43b6f"
-          height={100}
-          width={100}
-          timeout={3000}
-        />
+        <Puff color="#c43b6f" height={100} width={100} />
       </div>
     )
   }
