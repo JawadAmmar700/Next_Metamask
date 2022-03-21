@@ -6,7 +6,8 @@ import { PlayIcon, PauseIcon } from "@heroicons/react/outline"
 
 const View = ({ message, user }: any) => {
   const audioUrl = message.attributes.message
-  const isAudio = audioUrl.includes(`blob:${process.env.NEXT_PUBLIC_BASE_URL}`)
+  const isAudio = audioUrl.includes(process.env.NEXT_PUBLIC_MORALIS_AUDIO_URL)
+
   const audioRef = useRef<any>(null)
   const [audioDuration, setAudioDuration] = useState(0)
   const [sec, setSec] = useState(0)

@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react"
-import { useMoralis } from "react-moralis"
+import { useMoralis, useMoralisFile } from "react-moralis"
 import { MicrophoneIcon } from "@heroicons/react/outline"
 
 const VoiceRecorder = ({ user }: any) => {
+  const { saveFile } = useMoralisFile()
   const [isRecording, setIsRecording] = useState(false)
   const voiceRef = useRef<any>(null)
   const intervalRef = useRef<any>(null)
@@ -11,16 +12,22 @@ const VoiceRecorder = ({ user }: any) => {
   const { Moralis } = useMoralis()
   const [sec, setSec] = useState(0)
 
-  const countUp = () => {
+  const time = () => {
     intervalRef.current = setInterval(() => {
       setSec(sec => sec + 1)
     }, 1000)
   }
 
-  const record = () => {
+  const cancelTime = () => {
+    setSec(0)
+    intervalRef.current = clearInterval(intervalRef.current)
+  }
+
+  const record = async () => {
     setIsRecording(true)
-    countUp()
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    time()
+    let chunks: any = []
+    await navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
       const mediaRecorder = new MediaRecorder(stream)
       voiceRef.current = mediaRecorder
       streamRef.current = stream
@@ -28,38 +35,38 @@ const VoiceRecorder = ({ user }: any) => {
 
       mediaRecorder.addEventListener("dataavailable", event => {
         const eventData = event.data
-        audioChunks.push(eventData)
-        setAudioChuncks([...audioChunks, eventData])
+        chunks.push(eventData)
       })
     })
+    setAudioChuncks(chunks)
   }
 
   const stop = () => {
     setAudioChuncks([])
-    setSec(0)
-    clearInterval(intervalRef.current)
+    cancelTime()
     setIsRecording(false)
     streamRef.current.getTracks()[0].stop()
   }
 
   const send = () => {
     voiceRef.current.addEventListener("stop", () => {
-      const preventDuplicate = [...new Set(audioChunks)]
-      const lastAudioChuck =
-        preventDuplicate.length > 1
-          ? [preventDuplicate[preventDuplicate.length - 1]]
-          : preventDuplicate
-      const audioBlob = new Blob(lastAudioChuck, { type: "audio/mpeg-3" })
-      const audioUrl = URL.createObjectURL(audioBlob)
-      const messageInstance = Moralis.Object.extend("messages")
-      const message = new messageInstance()
-      message.save({
-        message: audioUrl,
-        user: user.getUsername(),
-        ethAddress: user.get("ethAddress"),
+      const audioBlob = new Blob(audioChunks, {
+        type: "audio/webm",
       })
-      setIsRecording(false)
-      streamRef.current.getTracks()[0].stop()
+
+      saveFile(`${user.getUsername()}-${sec}.webm`, audioBlob, {
+        type: "audio/webm",
+        saveIPFS: true,
+      }).then(data => {
+        const messageInstance = Moralis.Object.extend("messages")
+        const message = new messageInstance()
+        message.save({
+          message: data?._ipfs,
+          user: user.getUsername(),
+          ethAddress: user.get("ethAddress"),
+        })
+      })
+      stop()
     })
     voiceRef.current.stop()
   }
