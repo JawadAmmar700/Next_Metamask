@@ -14,7 +14,7 @@
     "emoji-picker-react": "^3.5.1",
     "get-blob-duration": "^1.2.0",
     "magic-sdk": "7.0.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "moralis": "^1.5.5",
     "next": "^12.1.0",
     "react": "^17.0.2",
